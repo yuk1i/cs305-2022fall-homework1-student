@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task 5</title>
+    <style>
+        button {
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+
+        input {
+            margin-left: 10px;
+        }
+
+        #sakana {
+            margin-top: 10px;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h3>Cookie: Authenticated</h3>
+    <div>
+        <label for="username">Username:</label><input id="username" value="admin"/><br/>
+        <label for="password">Password:</label><input id="password" value="admin"/><br/>
+        <p id="message"></p>
+        <div>
+            <label>Current Cookie:</label>
+            <p style="display: inline-block" id="cookie-current"></p>
+        </div>
+        <button id="submit-cookie">Submit</button>
+        <button id="clear-cookie">Clear Cookie</button>
+        <br>
+        <button id="direct-auth">Set Authenticated=yes directly</button>
+        <button id="refresh">Refresh Image</button>
+        <br>
+        <div id="lycoris">
+            <img id="sakana" alt="unauthorized" src=""/>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    function updateCookie() {
+        $("#cookie-current").html(document.cookie);
+    }
+
+    $("document").ready(() => {
+        if (window.location.href.indexOf("apiv2") > 0) {
+            $("#direct-auth").remove();
+        }
+        $("#submit-cookie").click(() => {
+            const reqData = {
+                "username": $("#username").val(),
+                "password": $("#password").val()
+            };
+            $.ajax({
+                type: "POST",
+                url: "login",
+                data: JSON.stringify(reqData),
+                success: (data) => {
+                    $("#message").html("Succeeded");
+                    updateCookie();
+                },
+                error: () => {
+                    $("#message").html("Failed");
+                }
+            })
+        });
+        $("#clear-cookie").click(() => {
+            document.cookie = "Authenticated=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+            document.cookie = "SESSION_KEY=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+            window.localStorage.clear();
+            updateCookie();
+        });
+        $("#refresh").click(() => {
+            $("#sakana").remove();
+            $('#lycoris').append($("<img id=\"sakana\" alt='unauthorized' src=\"\"/>"));
+            $("#sakana").attr("src", "getimage?_=" + Math.random());
+        });
+        $("#direct-auth").click(() => {
+            document.cookie = 'Authenticated=yes;';
+            updateCookie();
+        });
+        updateCookie();
+    });
+</script>
+</body>
+</html>
