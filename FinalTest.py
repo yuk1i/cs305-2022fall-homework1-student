@@ -87,7 +87,9 @@ class Request():
                 return Reply(0, 'time out', {}, b'', b'')
             except socket.error as e:
                 raise e
-        sok.close()
+            finally:
+                sok.shutdown(socket.SHUT_RDWR)
+                sok.close()
         body = data.split(b'\r\n\r\n', maxsplit=1)[1]
         if body == b'':
             pass
@@ -149,7 +151,9 @@ class Request():
                 return Reply(0, 'time out', {}, b'', '')
             except socket.error as e:
                 raise e
-        sok.close()
+            finally:
+                sok.shutdown(socket.SHUT_RDWR)
+                sok.close()
         status_code = int(data.split(b'\r\n')[0].split(b' ')[1])
         reason = data.split(b'\r\n')[0].split(b' ')[2].decode()
         headers = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
@@ -195,7 +199,9 @@ class Request():
                 return Reply(0, 'time out', {}, b'', '')
             except socket.error as e:
                 raise e
-        sok.close()
+            finally:
+                sok.shutdown(socket.SHUT_RDWR)
+                sok.close()
         status_code = int(data.split(b'\r\n')[0].split(b' ')[1])
         reason = data.split(b'\r\n')[0].split(b' ')[2].decode()
         headers = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
