@@ -96,8 +96,12 @@ class Request():
             raise Exception("HEAD body is not empty")
         status_code = int(data.split(b'\r\n')[0].split(b' ')[1])
         reason = data.split(b'\r\n')[0].split(b' ')[2].decode()
-        headers = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
-        headers = dict([header.split(': ') for header in headers[1:]])
+        headerlist = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
+        headers = dict()
+        for header in headerlist[1:]:
+            split = header.split(':')
+            if len(split) > 1:
+                headers.update({split[0]: split[1].removeprefix(' ')})
         return Reply(status_code, reason, headers, body, '')
 
     @staticmethod
@@ -154,8 +158,12 @@ class Request():
         sok.close()
         status_code = int(data.split(b'\r\n')[0].split(b' ')[1])
         reason = data.split(b'\r\n')[0].split(b' ')[2].decode()
-        headers = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
-        headers = dict([header.split(': ') for header in headers[1:]])
+        headerlist = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
+        headers = dict()
+        for header in headerlist[1:]:
+            split = header.split(':')
+            if len(split) > 1:
+                headers.update({split[0]: split[1].removeprefix(' ')})
         body = data.split(b'\r\n\r\n', maxsplit=1)[1]
         content = body.decode()
         return Reply(status_code, reason, headers, body, content)
@@ -201,8 +209,12 @@ class Request():
         sok.close()
         status_code = int(data.split(b'\r\n')[0].split(b' ')[1])
         reason = data.split(b'\r\n')[0].split(b' ')[2].decode()
-        headers = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
-        headers = dict([header.split(': ') for header in headers[1:]])
+        headerlist = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
+        headers = dict()
+        for header in headerlist[1:]:
+            split = header.split(':')
+            if len(split) > 1:
+                headers.update({split[0]: split[1].removeprefix(' ')})
         body = data.split(b'\r\n\r\n', maxsplit=1)[1]
         content = data
         return Reply(status_code, reason, headers, body, content)
