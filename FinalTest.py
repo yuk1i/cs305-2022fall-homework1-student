@@ -82,14 +82,13 @@ class Request():
                 data += data1
                 if not data1:
                     break
-            except sok.timeout:
+            except socket.timeout:
+                sok.close()
                 print('time out')
                 return Reply(0, 'time out', {}, b'', b'')
             except socket.error as e:
                 raise e
-            finally:
-                sok.shutdown(socket.SHUT_RDWR)
-                sok.close()
+        sok.close()
         body = data.split(b'\r\n\r\n', maxsplit=1)[1]
         if body == b'':
             pass
@@ -146,14 +145,13 @@ class Request():
                 data += data1
                 if not data1:
                     break
-            except sok.timeout:
+            except socket.timeout:
+                sok.close()
                 print('time out')
-                return Reply(0, 'time out', {}, b'', '')
+                return Reply(0, 'time out', {}, b'', b'')
             except socket.error as e:
                 raise e
-            finally:
-                sok.shutdown(socket.SHUT_RDWR)
-                sok.close()
+        sok.close()
         status_code = int(data.split(b'\r\n')[0].split(b' ')[1])
         reason = data.split(b'\r\n')[0].split(b' ')[2].decode()
         headers = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
@@ -194,14 +192,13 @@ class Request():
                 data += data1
                 if not data1:
                     break
-            except sok.timeout:
+            except socket.timeout:
+                sok.close()
                 print('time out')
-                return Reply(0, 'time out', {}, b'', '')
+                return Reply(0, 'time out', {}, b'', b'')
             except socket.error as e:
                 raise e
-            finally:
-                sok.shutdown(socket.SHUT_RDWR)
-                sok.close()
+        sok.close()
         status_code = int(data.split(b'\r\n')[0].split(b' ')[1])
         reason = data.split(b'\r\n')[0].split(b' ')[2].decode()
         headers = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
