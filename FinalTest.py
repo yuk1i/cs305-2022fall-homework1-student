@@ -99,7 +99,7 @@ class Request():
         headerlist = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
         headers = dict()
         for header in headerlist[1:]:
-            split = header.split(':')
+            split = header.split(':', maxsplit=1)
             if len(split) > 1:
                 headers.update({split[0]: split[1].removeprefix(' ')})
         return Reply(status_code, reason, headers, body, '')
@@ -161,7 +161,7 @@ class Request():
         headerlist = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
         headers = dict()
         for header in headerlist[1:]:
-            split = header.split(':')
+            split = header.split(':', maxsplit=1)
             if len(split) > 1:
                 headers.update({split[0]: split[1].removeprefix(' ')})
         body = data.split(b'\r\n\r\n', maxsplit=1)[1]
@@ -212,7 +212,7 @@ class Request():
         headerlist = data.split(b'\r\n\r\n', maxsplit=1)[0].decode().split('\r\n')
         headers = dict()
         for header in headerlist[1:]:
-            split = header.split(':')
+            split = header.split(':', maxsplit=1)
             if len(split) > 1:
                 headers.update({split[0]: split[1].removeprefix(' ')})
         body = data.split(b'\r\n\r\n', maxsplit=1)[1]
